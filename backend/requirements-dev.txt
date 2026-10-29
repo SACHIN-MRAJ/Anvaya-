@@ -1,0 +1,9 @@
+-r requirements.txt
+pytest==9.1.1
+httpx2==2.16.0            # FastAPI's TestClient transport
+ruff==0.17.2              # lint (pyproject.toml)
+bandit==1.9.4             # security scan
+pip-audit==2.10.1         # known-vulnerability audit of dependencies
+pytest-cov==7.1.0         # coverage
+schemathesis==4.32.4      # API fuzzing (scripts/fuzz.py)
+asyncpg==0.32.0           # run the tests on PostgreSQL (ANUMATI_TEST_POSTGRES)

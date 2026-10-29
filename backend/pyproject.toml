@@ -1,0 +1,35 @@
+[project]
+name = "anumati-api"
+version = "1.1.0"
+description = "ANUMATI backend: approval workflow, compliance monitoring and alerts for AICTE"
+requires-python = ">=3.12"
+
+[tool.ruff]
+line-length = 200
+target-version = "py312"
+extend-exclude = [".venv", "storage"]
+
+[tool.ruff.lint]
+# pyflakes, pycodestyle, bugbear, pyupgrade, bandit rules, async pitfalls, simplifications, ruff-specific
+select = ["E", "F", "W", "B", "UP", "S", "ASYNC", "SIM", "RUF"]
+ignore = [
+  "E501",            # long lines are fine for route signatures
+  "RUF001", "RUF002", "RUF003",  # typographic quotes in user-facing text are intended
+  "UP017",
+]
+
+[tool.ruff.lint.flake8-bugbear]
+# FastAPI's dependency-injection idiom
+extend-immutable-calls = ["fastapi.Depends", "fastapi.File", "fastapi.Form", "fastapi.Query", "fastapi.Header", "app.security.require_roles", "app.security.require_portal", "app.security.require_permission"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101", "S105", "S106", "S311"]
+"scripts/*" = ["S101"]
+
+[tool.coverage.run]
+source = ["app"]
+branch = true
+
+[tool.coverage.report]
+skip_covered = false
+show_missing = false

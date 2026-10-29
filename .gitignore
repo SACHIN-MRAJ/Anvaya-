@@ -1,0 +1,59 @@
+# Dependencies
+node_modules/
+.venv/
+env/
+venv/
+
+# Build and distribution
+dist/
+build/
+*.egg-info/
+
+# Environment files and credentials
+.env
+.env.local
+.env.*.local
+deploy/.env
+
+# Python caches and bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.hypothesis/
+.schemathesis/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Local database journals (keep seeded anumati.db)
+*.db-shm
+*.db-wal
+
+# Local storage uploads
+storage/files/
+backend/storage/files/
+
+# IDE and tool configuration
+.claude/
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+*.log
+WhatsApp Image*
+
+# Exclude unnecessary document drafts, video pitch scripts, and slide decks from Git
+*Video_Pitch_Script*
+generate_pitch_docx.py
+*.docx
+*.pptx
+documents/archive/
+documents/build/
+documents/ppt/
+Digital Approval Workflow Illustration.png

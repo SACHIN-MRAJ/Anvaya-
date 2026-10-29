@@ -1,0 +1,8 @@
+# Build context of the website image (deploy/web.Dockerfile) is this folder; only frontend/ and deploy/ are needed.
+**/node_modules
+**/dist
+backend
+documents
+deploy/.env
+**/.env*
+*.log

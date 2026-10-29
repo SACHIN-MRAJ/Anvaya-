@@ -1,0 +1,137 @@
+# ANUMATI staging stack: the whole system on one machine, built the way production is.
+#
+#   cd deploy
+#   docker compose up -d --build        website  http://localhost:8080
+#                                        sign-in  http://localhost:8081 (Keycloak; sample accounts in deploy/README.md)
+#
+#                                        test inbox http://localhost:8025 (Mailpit: every alert email lands here)
+# Secrets come from deploy/.env (see .env.example). Only the website (8080), sign-in (8081) and the test inbox (8025)
+# are published, on this computer only; the API, database, storage, cache and virus scanner stay inside the stack.
+name: anumati
+
+x-api-env: &api-env
+  TZ: Asia/Kolkata                  # the service runs on Indian Standard Time, like its receipts
+  ANUMATI_ENV: staging
+  ANUMATI_DATABASE_URL: postgresql+asyncpg://anumati_app:${ANUMATI_APP_DB_PASSWORD}@db:5432/anumati
+  ANUMATI_DATABASE_ADMIN_URL: postgresql+asyncpg://anumati:${POSTGRES_PASSWORD}@db:5432/anumati
+  ANUMATI_RUN_MIGRATIONS: "true"
+  ANUMATI_SECRET_KEY: ${ANUMATI_SECRET_KEY}
+  ANUMATI_AUTH_MODE: oidc
+  ANUMATI_WEB_URL: http://localhost:8080
+  ANUMATI_OIDC_ISSUER: http://localhost:8081/realms/anumati
+  ANUMATI_OIDC_INTERNAL_ISSUER: http://keycloak:8080/realms/anumati
+  ANUMATI_OIDC_CLIENT_ID: anumati-web
+  ANUMATI_OIDC_CLIENT_SECRET: ${ANUMATI_OIDC_CLIENT_SECRET}
+  ANUMATI_CORS_ORIGINS: '["http://localhost:8080"]'
+  ANUMATI_STORAGE_BACKEND: s3
+  ANUMATI_STORAGE_DIR: /srv/storage
+  ANUMATI_S3_ENDPOINT: storage:9000
+  ANUMATI_S3_ACCESS_KEY: ${S3_ACCESS_KEY}
+  ANUMATI_S3_SECRET_KEY: ${S3_SECRET_KEY}
+  ANUMATI_S3_SECURE: "false"
+  ANUMATI_CLAMD_HOST: clamav:3310
+  ANUMATI_REDIS_URL: redis://valkey:6379/0     # rate limit shared by every API process
+  ANUMATI_EMAIL_MODE: smtp
+  ANUMATI_SMTP_URL: smtp://mailpit:1025        # a test inbox: every alert email is really sent and can be read at :8025
+  ANUMATI_WEBHOOK_SECRET: ${ANUMATI_WEBHOOK_SECRET}
+  ANUMATI_METRICS_TOKEN: ${ANUMATI_METRICS_TOKEN}
+  ANUMATI_AI_API_KEY: ${ANUMATI_AI_API_KEY:-}                 # optional: AI engine generates Ask ANUMATI replies from handbook
+  ANUMATI_ANTHROPIC_API_KEY: ${ANUMATI_ANTHROPIC_API_KEY:-}
+  ANUMATI_LOG_FORMAT: json
+  ANUMATI_DB_POOL_SIZE: "5"           # per worker: 2 workers x (5 + 5) stays far below PostgreSQL's 100 connections
+  ANUMATI_DB_MAX_OVERFLOW: "5"
+  WEB_CONCURRENCY: "2"                # API worker processes; the deadline check runs once thanks to a PostgreSQL lock
+  ANUMATI_SEED_ON_START: "true"       # staging shows the sample cycle; production starts empty
+  ANUMATI_FIXED_TODAY: "2026-10-22"
+
+services:
+  web:
+    build: { context: .., dockerfile: deploy/web.Dockerfile }
+    image: anumati-web:1.1
+    ports: ["127.0.0.1:8080:8080"]
+    depends_on:
+      api: { condition: service_healthy }
+    restart: unless-stopped
+
+  api:
+    build: { context: ../backend }
+    image: anumati-api:1.1
+    environment: *api-env
+    volumes: ["api-keys:/srv/storage"]   # the letter-signing key must survive restarts
+    depends_on:
+      db: { condition: service_healthy }
+      keycloak: { condition: service_healthy }
+      storage: { condition: service_started }
+      valkey: { condition: service_healthy }
+    restart: unless-stopped
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: anumati
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: anumati
+      ANUMATI_APP_DB_PASSWORD: ${ANUMATI_APP_DB_PASSWORD}
+      KEYCLOAK_DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
+    volumes:
+      - pg:/var/lib/postgresql/data
+      - ./postgres/initdb.sh:/docker-entrypoint-initdb.d/10-roles.sh:ro
+    healthcheck: { test: ["CMD-SHELL", "pg_isready -U anumati -d anumati"], interval: 5s, retries: 20 }
+    restart: unless-stopped
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.4
+    command: ["start-dev", "--import-realm"]
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://db:5432/keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
+      KC_HOSTNAME: http://localhost:8081
+      KC_HOSTNAME_BACKCHANNEL_DYNAMIC: "true"   # the API reaches Keycloak as keycloak:8080; tokens still say localhost:8081
+      KC_HTTP_ENABLED: "true"
+      KC_HEALTH_ENABLED: "true"
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      ANUMATI_OIDC_CLIENT_SECRET: ${ANUMATI_OIDC_CLIENT_SECRET}
+      ANUMATI_DEMO_PASSWORD: ${ANUMATI_DEMO_PASSWORD}
+    volumes: ["./keycloak/anumati-realm.json:/opt/keycloak/data/import/anumati-realm.json:ro"]
+    ports: ["127.0.0.1:8081:8080"]
+    depends_on:
+      db: { condition: service_healthy }
+    healthcheck:
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/9000 && printf 'GET /health/ready HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n' >&3 && grep -q UP <&3"]
+      interval: 10s
+      retries: 30
+      start_period: 30s
+    restart: unless-stopped
+
+  storage:                               # S3-compatible object storage (RustFS, Apache-2.0)
+    image: rustfs/rustfs:1.0.3
+    environment:
+      RUSTFS_ACCESS_KEY: ${S3_ACCESS_KEY}
+      RUSTFS_SECRET_KEY: ${S3_SECRET_KEY}
+    volumes: ["files:/data"]
+    restart: unless-stopped
+
+  valkey:                                # shared, in-memory counters (Valkey: the open-source Redis)
+    image: valkey/valkey:8.1-alpine
+    command: ["valkey-server", "--save", "", "--appendonly", "no", "--maxmemory", "64mb", "--maxmemory-policy", "allkeys-lru"]
+    healthcheck: { test: ["CMD", "valkey-cli", "ping"], interval: 5s, retries: 20 }
+    restart: unless-stopped
+
+  mailpit:                               # test inbox for alert emails (web UI on http://localhost:8025)
+    image: axllent/mailpit:v1.27
+    ports: ["127.0.0.1:8025:8025"]
+    restart: unless-stopped
+
+  clamav:                                # virus scanner; downloads signatures on first start (a few minutes)
+    image: clamav/clamav:stable
+    volumes: ["clamav:/var/lib/clamav"]
+    restart: unless-stopped
+
+volumes:
+  pg: {}
+  files: {}
+  clamav: {}
+  api-keys: {}

@@ -1,0 +1,23 @@
+{
+  "model": "RandomForestClassifier",
+  "n_estimators": 200,
+  "n_features": 6,
+  "feature_names": [
+    "word_density",
+    "date_richness",
+    "has_authority",
+    "has_institution_name",
+    "has_signature",
+    "vocab_richness"
+  ],
+  "n_train_good": 400,
+  "n_train_bad": 400,
+  "classes": [
+    "bad_document",
+    "good_document"
+  ],
+  "label_map": {
+    "0": "bad_document",
+    "1": "good_document"
+  }
+}

@@ -1,0 +1,28 @@
+# ANUMATI API runtime dependencies (tested on Python 3.14: Windows 11 and the python:3.14-slim container).
+fastapi==0.161.1          # web framework, validation, OpenAPI docs
+uvicorn==0.54.0           # ASGI server
+SQLAlchemy==2.1.6         # database layer (async)
+aiosqlite==0.22.1         # SQLite driver for development
+greenlet==3.5.6           # needed by SQLAlchemy's async mode
+pydantic==2.14.1          # request and response models
+pydantic-settings==2.16.1  # ANUMATI_* environment settings
+PyJWT==2.15.1             # session tokens and Keycloak (OIDC) access tokens
+cryptography==50.0.2      # Ed25519 signing of decision letters
+pyHanko==0.38.0           # digital-signature (DSC) checks on uploaded PDFs
+httpx==0.28.1             # drand beacon, SMS and WhatsApp gateways
+python-multipart==0.0.32  # file uploads
+PyYAML==6.0.3             # scripts/export_contract.py
+alembic==1.20.1           # PostgreSQL schema migrations (migrations/)
+minio==7.2.20             # S3-compatible object storage client (ANUMATI_STORAGE_BACKEND=s3)
+prometheus-client==0.24.1 # /metrics
+redis==8.1.0              # shared rate limit through Valkey/Redis (ANUMATI_REDIS_URL)
+anthropic==2.2.0          # optional: LLM assistant synthesis engine
+# AI document verification (doc_ai.py)
+pdfminer.six==20260107    # extract text from digital PDFs
+numpy==2.5.4              # numerical ops for the ML classifier
+scikit-learn==1.9.1       # ML document-quality classifier (IsolationForest + rule features)
+Pillow==13.0.0            # image handling for OCR pipeline
+dateparser==1.4.3         # parse dates extracted from document text
+regex==2026.9.29          # advanced regex patterns for NLP field extraction
+pdf2image==1.17.0         # convert PDF pages to images for Tesseract OCR
+pytesseract==0.3.13       # Python wrapper for Tesseract OCR (binary: Tesseract 5.x)

@@ -1,0 +1,504 @@
+{
+  "realm": "anumati",
+  "displayName": "ANUMATI",
+  "enabled": true,
+  "sslRequired": "external",
+  "registrationAllowed": false,
+  "resetPasswordAllowed": false,
+  "rememberMe": false,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "bruteForceProtected": true,
+  "failureFactor": 5,
+  "permanentLockout": false,
+  "passwordPolicy": "length(12) and notUsername",
+  "accessTokenLifespan": 300,
+  "ssoSessionIdleTimeout": 1800,
+  "ssoSessionMaxLifespan": 36000,
+  "internationalizationEnabled": true,
+  "supportedLocales": [
+    "en",
+    "hi"
+  ],
+  "defaultLocale": "en",
+  "roles": {
+    "realm": [
+      {
+        "name": "institution",
+        "description": "Principal or trust official of an approved institution"
+      },
+      {
+        "name": "dealing-officer",
+        "description": "Scrutinises files in one region"
+      },
+      {
+        "name": "regional-officer",
+        "description": "Heads a regional office"
+      },
+      {
+        "name": "bureau-head",
+        "description": "Approval Bureau head; sees every region"
+      },
+      {
+        "name": "committee-member",
+        "description": "Executive Committee member; records decisions"
+      },
+      {
+        "name": "rules-administrator",
+        "description": "Maintains the handbook decision tables"
+      },
+      {
+        "name": "institution-hod",
+        "description": "Head of Department: prepares and reviews drafts; cannot submit"
+      },
+      {
+        "name": "institution-compliance",
+        "description": "Compliance staff: campuses, certificates and replies to AICTE"
+      },
+      {
+        "name": "institution-academic",
+        "description": "Academic administrator: courses, seats and faculty"
+      },
+      {
+        "name": "institution-staff",
+        "description": "Institution staff: prepares drafts and uploads documents"
+      },
+      {
+        "name": "evc-coordinator",
+        "description": "EVC coordinator: assigns field inspections"
+      },
+      {
+        "name": "inspector",
+        "description": "Inspector: fills in and signs field inspection reports"
+      },
+      {
+        "name": "auditor",
+        "description": "Auditor: read-only access to every officer screen"
+      },
+      {
+        "name": "system-administrator",
+        "description": "System administrator: switches accounts on or off"
+      }
+    ]
+  },
+  "groups": [
+    {
+      "name": "institutions",
+      "subGroups": [
+        {
+          "name": "INS-001"
+        },
+        {
+          "name": "INS-002"
+        },
+        {
+          "name": "INS-003"
+        }
+      ]
+    },
+    {
+      "name": "regions",
+      "subGroups": [
+        {
+          "name": "WRO"
+        },
+        {
+          "name": "SRO"
+        },
+        {
+          "name": "SWRO"
+        },
+        {
+          "name": "CRO"
+        },
+        {
+          "name": "NWRO"
+        },
+        {
+          "name": "NRO"
+        },
+        {
+          "name": "ERO"
+        },
+        {
+          "name": "SCRO"
+        },
+        {
+          "name": "NERO"
+        },
+        {
+          "name": "KRO"
+        }
+      ]
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "anumati-web",
+      "name": "ANUMATI",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "${ANUMATI_OIDC_CLIENT_SECRET}",
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "implicitFlowEnabled": false,
+      "serviceAccountsEnabled": false,
+      "frontchannelLogout": true,
+      "fullScopeAllowed": true,
+      "redirectUris": [
+        "http://localhost:8080/api/auth/callback",
+        "http://localhost:5180/api/auth/callback"
+      ],
+      "webOrigins": [
+        "http://localhost:8080",
+        "http://localhost:5180"
+      ],
+      "attributes": {
+        "pkce.code.challenge.method": "S256",
+        "post.logout.redirect.uris": "http://localhost:8080/*##http://localhost:5180/*"
+      },
+      "protocolMappers": [
+        {
+          "name": "realm roles",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-realm-role-mapper",
+          "config": {
+            "multivalued": "true",
+            "claim.name": "roles",
+            "jsonType.label": "String",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true"
+          }
+        },
+        {
+          "name": "groups",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-group-membership-mapper",
+          "config": {
+            "full.path": "true",
+            "claim.name": "groups",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true"
+          }
+        },
+        {
+          "name": "audience",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "config": {
+            "included.client.audience": "anumati-web",
+            "id.token.claim": "false",
+            "access.token.claim": "true"
+          }
+        }
+      ]
+    }
+  ],
+  "users": [
+    {
+      "username": "principal.nvit",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Principal",
+      "lastName": "Narmada Valley IT",
+      "email": "principal@nvit.example",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "${ANUMATI_DEMO_PASSWORD}",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "institution"
+      ],
+      "groups": [
+        "/institutions/INS-001"
+      ]
+    },
+    {
+      "username": "principal.sahyadri",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Principal",
+      "lastName": "Sahyadri Polytechnic",
+      "email": "principal@sahyadri.example",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "${ANUMATI_DEMO_PASSWORD}",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "institution"
+      ],
+      "groups": [
+        "/institutions/INS-002"
+      ]
+    },
+    {
+      "username": "dealing.cro",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Anita",
+      "lastName": "Rao",
+      "email": "anita.rao@aicte.example",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "${ANUMATI_DEMO_PASSWORD}",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "dealing-officer"
+      ],
+      "groups": [
+        "/regions/CRO"
+      ]
+    },
+    {
+      "username": "regional.cro",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Vikram",
+      "lastName": "Singh",
+      "email": "vikram.singh@aicte.example",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "${ANUMATI_DEMO_PASSWORD}",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "regional-officer"
+      ],
+      "groups": [
+        "/regions/CRO"
+      ]
+    },
+    {
+      "username": "bureau.head",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Meera",
+      "lastName": "Iyer",
+      "email": "meera.iyer@aicte.example",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "${ANUMATI_DEMO_PASSWORD}",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "bureau-head"
+      ],
+      "groups": []
+    },
+    {
+      "username": "committee.member",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Rahul",
+      "lastName": "Verma",
+      "email": "rahul.verma@aicte.example",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "${ANUMATI_DEMO_PASSWORD}",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "committee-member"
+      ],
+      "groups": []
+    },
+    {
+      "username": "rules.admin",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Farah",
+      "lastName": "Khan",
+      "email": "farah.khan@aicte.example",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "${ANUMATI_DEMO_PASSWORD}",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "rules-administrator"
+      ],
+      "groups": []
+    },
+    {
+      "username": "hod.nvit",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "A.",
+      "lastName": "Mehta",
+      "email": "hod.cse@nvit.example",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "${ANUMATI_DEMO_PASSWORD}",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "institution-hod"
+      ],
+      "groups": [
+        "/institutions/INS-001"
+      ]
+    },
+    {
+      "username": "compliance.nvit",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "S.",
+      "lastName": "Joshi",
+      "email": "compliance@nvit.example",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "${ANUMATI_DEMO_PASSWORD}",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "institution-compliance"
+      ],
+      "groups": [
+        "/institutions/INS-001"
+      ]
+    },
+    {
+      "username": "academic.nvit",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "P.",
+      "lastName": "Nair",
+      "email": "academic@nvit.example",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "${ANUMATI_DEMO_PASSWORD}",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "institution-academic"
+      ],
+      "groups": [
+        "/institutions/INS-001"
+      ]
+    },
+    {
+      "username": "staff.nvit",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "K.",
+      "lastName": "Rao",
+      "email": "office@nvit.example",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "${ANUMATI_DEMO_PASSWORD}",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "institution-staff"
+      ],
+      "groups": [
+        "/institutions/INS-001"
+      ]
+    },
+    {
+      "username": "evc.coordinator",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "A.",
+      "lastName": "Sharma",
+      "email": "evc.coordinator@aicte.example",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "${ANUMATI_DEMO_PASSWORD}",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "evc-coordinator"
+      ],
+      "groups": []
+    },
+    {
+      "username": "inspector.menon",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "R.",
+      "lastName": "Menon",
+      "email": "r.menon@experts.example",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "${ANUMATI_DEMO_PASSWORD}",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "inspector"
+      ],
+      "groups": []
+    },
+    {
+      "username": "auditor",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "L.",
+      "lastName": "Fernandes",
+      "email": "auditor@aicte.example",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "${ANUMATI_DEMO_PASSWORD}",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "auditor"
+      ],
+      "groups": []
+    },
+    {
+      "username": "sysadmin",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "T.",
+      "lastName": "Singh",
+      "email": "sysadmin@aicte.example",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "${ANUMATI_DEMO_PASSWORD}",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "system-administrator"
+      ],
+      "groups": []
+    }
+  ]
+}
