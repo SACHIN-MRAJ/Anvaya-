@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ANUMATI · Solutions & Novelties Showcase | Team Anvaya (SIH 2026)</title>
+  <meta name="description" content="Explore how ANUMATI transforms AICTE technical education regulatory approvals through 19 architectural novelties, quantum randomness, fair clocks, and AI pre-flight diagnostics.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Noto+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN with configuration -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace']
+          },
+          colors: {
+            brand: {
+              50: '#EEF4FB',
+              100: '#D5DBE7',
+              200: '#B0BDD4',
+              700: '#1B3B78',
+              800: '#122B5C',
+              900: '#0A1D42',
+              950: '#050E21'
+            },
+            saffron: {
+              400: '#F39C12',
+              500: '#E67E22',
+              600: '#C65F00'
+            },
+            indgreen: {
+              500: '#10B981',
+              600: '#17713F',
+              700: '#125A32'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Custom Theme Styles -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-[#050E21] text-slate-100 min-h-screen selection:bg-amber-500 selection:text-navy-950">
+
+  <!-- Background Canvas for Interactive Particles -->
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- Spotlight Cursor Follower -->
+  <div id="cursor-spotlight"></div>
+
+  <!-- Content Layer -->
+  <div class="content-wrapper min-h-screen flex flex-col justify-between">
+
+    <!-- Top Navigation Header -->
+    <header class="sticky top-0 z-50 backdrop-blur-xl bg-[#0A1D42]/80 border-b border-white/10 px-6 py-4">
+      <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+        <a href="#hero" class="flex items-center gap-3 group">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 text-slate-950 font-black text-xl grid place-items-center shadow-lg group-hover:scale-105 transition-transform">
+            अ
+          </div>
+          <div>
+            <div class="font-extrabold text-lg tracking-tight text-white flex items-center gap-2">
+              <span>ANUMATI</span>
+              <span class="text-xs px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-bold border border-amber-500/30">SIH 2026</span>
+            </div>
+            <div class="text-[11px] font-semibold text-slate-400 tracking-wider uppercase">Team Anvaya · Regulatory OS</div>
+          </div>
+        </a>
+
+        <!-- Desktop Navigation Links -->
+        <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-300">
+          <a href="#problems" class="hover:text-amber-400 transition-colors">The 6 Crises</a>
+          <a href="#journey" class="hover:text-amber-400 transition-colors">One File's Journey</a>
+          <a href="#novelties" class="hover:text-amber-400 transition-colors">The 19 Novelties</a>
+          <a href="#sandboxes" class="hover:text-amber-400 transition-colors text-amber-400 font-bold flex items-center gap-1.5">
+            <span class="relative flex h-2 w-2">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+            </span>
+            Try Live Demos
+          </a>
+        </nav>
+
+        <!-- GitHub & Actions -->
+        <div class="flex items-center gap-3">
+          <a href="https://github.com/SACHIN-MRAJ/Anvaya-" target="_blank" rel="noopener noreferrer" class="px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs border border-white/15 transition-all flex items-center gap-2">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+            <span class="hidden sm:inline">GitHub Repo</span>
+          </a>
+          <a href="#novelties" class="px-4 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs shadow-lg transition-transform hover:scale-105">
+            Explore 19 Novelties
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Body Sections -->
+    <main class="max-w-7xl mx-auto px-6 py-12 space-y-24">
+
+      <!-- HERO SECTION -->
+      <section id="hero" class="text-center space-y-6 pt-6">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 font-bold text-xs uppercase tracking-wider">
+          <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+          Smart India Hackathon 2026 · Official Solution Blueprint
+        </div>
+
+        <h1 class="text-4xl sm:text-6xl font-black text-white tracking-tight leading-tight max-w-4xl mx-auto">
+          Moving Technical Accreditation From <span class="gradient-text-saffron">Bureaucratic Friction</span> To <span class="gradient-text-blue">Algorithmic Trust</span>
+        </h1>
+
+        <p class="text-base sm:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
+          <strong>ANUMATI (अनुमति)</strong> is India’s first autonomous regulatory ecosystem for <strong>AICTE</strong>. Built by <strong>Team Anvaya</strong>, it turns hundreds of pages of PDF manuals into executable code, eliminating arbitrary delays, ghost faculty cartels, and unverified inspections.
+        </p>
+
+        <!-- KPI Ticker Cards -->
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-3 max-w-4xl mx-auto pt-6">
+          <div class="glass-panel p-4 text-center">
+            <div class="text-3xl font-black gradient-text-saffron">19</div>
+            <div class="text-xs font-bold text-slate-300 mt-1 uppercase tracking-wider">Architectural Novelties</div>
+          </div>
+          <div class="glass-panel p-4 text-center">
+            <div class="text-3xl font-black gradient-text-blue">46</div>
+            <div class="text-xs font-bold text-slate-300 mt-1 uppercase tracking-wider">Living Screens</div>
+          </div>
+          <div class="glass-panel p-4 text-center">
+            <div class="text-3xl font-black gradient-text-emerald">158</div>
+            <div class="text-xs font-bold text-slate-300 mt-1 uppercase tracking-wider">Live API Endpoints</div>
+          </div>
+          <div class="glass-panel p-4 text-center">
+            <div class="text-3xl font-black text-purple-400">89%</div>
+            <div class="text-xs font-bold text-slate-300 mt-1 uppercase tracking-wider">Pre-Filled Renewals</div>
+          </div>
+          <div class="glass-panel p-4 text-center col-span-2 md:col-span-1">
+            <div class="text-3xl font-black text-amber-400">0%</div>
+            <div class="text-xs font-bold text-slate-300 mt-1 uppercase tracking-wider">Lobbying (drand Proof)</div>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-center gap-4 pt-4">
+          <a href="#sandboxes" class="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-sm shadow-xl transition-all hover:scale-105 flex items-center gap-2">
+            <span>Try 6 Interactive Sandboxes</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </a>
+          <a href="#novelties" class="px-6 py-3.5 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-bold text-sm border border-white/15 transition-all">
+            Browse All 19 Solutions
+          </a>
+        </div>
+      </section>
+
+      <!-- SECTION 1: THE 6 REAL-WORLD CRISES & SOLUTIONS -->
+      <section id="problems" class="space-y-6 scroll-mt-24">
+        <div class="text-center space-y-2">
+          <div class="text-xs font-bold uppercase tracking-widest text-amber-400">The Problem Statement</div>
+          <h2 class="text-3xl font-extrabold text-white">The Six Accreditation Bottlenecks ANUMATI Solves</h2>
+          <p class="text-sm text-slate-300 max-w-2xl mx-auto">AICTE oversees billions in institutional investments and millions of students. Here are the 6 critical systemic failures of the legacy system and the exact novelties that fix them.</p>
+        </div>
+
+        <div id="problems-container" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <!-- Populated dynamically via app.js -->
+        </div>
+      </section>
+
+      <!-- SECTION 2: ONE FILE'S JOURNEY -->
+      <section id="journey" class="space-y-6 scroll-mt-24">
+        <div class="text-center space-y-2">
+          <div class="text-xs font-bold uppercase tracking-widest text-blue-400">Lifecycle Workflow</div>
+          <h2 class="text-3xl font-extrabold text-white">Follow One File: From First Click to Post-Approval</h2>
+          <p class="text-sm text-slate-300 max-w-2xl mx-auto">Watch how an application moves through ANUMATI without bureaucratic blackouts, anchored by algorithmic rules and cryptographic proofs.</p>
+        </div>
+
+        <div id="journey-container" class="max-w-4xl mx-auto pt-6">
+          <!-- Populated dynamically via app.js -->
+        </div>
+      </section>
+
+      <!-- SECTION 3: THE 19 ARCHITECTURAL NOVELTIES -->
+      <section id="novelties" class="space-y-6 scroll-mt-24">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+          <div class="space-y-2">
+            <div class="text-xs font-bold uppercase tracking-widest text-amber-400">Complete Innovation Catalog</div>
+            <h2 class="text-3xl font-extrabold text-white">All 19 Platform Novelties</h2>
+            <p class="text-sm text-slate-300">Click any card to inspect the problem, algorithmic solution, step-by-step logic, and global standards origin.</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="openAllNovelties()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-200 border border-slate-700 transition">Open All</button>
+            <button onclick="closeAllNovelties()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-200 border border-slate-700 transition">Close All</button>
+          </div>
+        </div>
+
+        <!-- Search & Filter Controls -->
+        <div class="glass-panel p-4 rounded-2xl space-y-4">
+          <div class="relative">
+            <input type="text" id="search-input" placeholder="Search novelties by title, keyword, APH clause (e.g. 'drand', 'lease', 'clock', 'OCR')..." class="w-full bg-slate-900/80 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-amber-400">
+            <div class="absolute right-3 top-3 text-xs text-slate-400 font-mono" id="novelties-count">19 of 19</div>
+          </div>
+
+          <!-- Area Pills -->
+          <div class="flex flex-wrap gap-2 pt-1">
+            <button data-area="All" onclick="filterByArea('All')" class="pill-area active px-3.5 py-1.5 rounded-full text-xs font-bold bg-amber-500 text-navy-950 transition-colors">All (19)</button>
+            <button data-area="Workflow" onclick="filterByArea('Workflow')" class="pill-area px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-colors">Workflow (5)</button>
+            <button data-area="Fairness" onclick="filterByArea('Fairness')" class="pill-area px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-colors">Fairness (3)</button>
+            <button data-area="Trust" onclick="filterByArea('Trust')" class="pill-area px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-colors">Trust (4)</button>
+            <button data-area="Compliance" onclick="filterByArea('Compliance')" class="pill-area px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-colors">Compliance (3)</button>
+            <button data-area="Insight" onclick="filterByArea('Insight')" class="pill-area px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-colors">Insight (3)</button>
+            <button data-area="Reach" onclick="filterByArea('Reach')" class="pill-area px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-colors">Reach (1)</button>
+          </div>
+        </div>
+
+        <!-- List of Novelty Cards -->
+        <div id="novelties-container" class="space-y-4">
+          <!-- Populated dynamically via app.js -->
+        </div>
+      </section>
+
+      <!-- SECTION 4: INTERACTIVE DEMOS & SANDBOXES -->
+      <section id="sandboxes" class="space-y-8 scroll-mt-24">
+        <div class="text-center space-y-2">
+          <div class="text-xs font-bold uppercase tracking-widest text-amber-400">Interactive Evaluation Suite</div>
+          <h2 class="text-3xl font-extrabold text-white">Live Functional Sandboxes</h2>
+          <p class="text-sm text-slate-300 max-w-2xl mx-auto">Judges and evaluators can interact with the core algorithms directly inside this browser tab.</p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6">
+
+          <!-- Sandbox 1: Rules-as-Code -->
+          <div id="sandbox-rules" class="glass-panel p-6 rounded-2xl space-y-4 border border-blue-500/30">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold uppercase tracking-wider text-amber-400">Demo #1 · Novelty 01</span>
+              <span class="badge-pill badge-live">Live Simulator</span>
+            </div>
+            <h3 class="text-lg font-bold text-white">Approval Process Handbook as Code</h3>
+            <p class="text-xs text-slate-300">Select any application type to inspect the dynamically generated regulatory route and statutory deadline.</p>
+            
+            <div>
+              <label for="demo1-select" class="block text-xs font-semibold text-slate-400 mb-1">Select AICTE Application Request:</label>
+              <select id="demo1-select" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-400">
+                <option value="site">Change of Site / Campus Relocation</option>
+                <option value="new">Establishment of New Technical College</option>
+                <option value="eoa">Extension of Approval (EoA) Renewal</option>
+                <option value="intake">Increase in Intake / Additional Seat Division</option>
+                <option value="programme">Introduction of New Programme / Level</option>
+                <option value="closure">Closure of Institution / Course</option>
+              </select>
+            </div>
+
+            <div class="space-y-2 pt-2">
+              <div class="text-[11px] font-bold text-slate-400 uppercase">Statutory Processing Route:</div>
+              <div id="demo1-path" class="flex flex-wrap items-center gap-2">
+                <!-- Populated via app.js -->
+              </div>
+            </div>
+
+            <div id="demo1-meta">
+              <!-- Populated via app.js -->
+            </div>
+          </div>
+
+          <!-- Sandbox 2: Fair Clock -->
+          <div id="sandbox-clock" class="glass-panel p-6 rounded-2xl space-y-4 border border-amber-500/30">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold uppercase tracking-wider text-amber-400">Demo #2 · Novelty 02</span>
+              <span class="badge-pill badge-live">EMA Standard</span>
+            </div>
+            <h3 class="text-lg font-bold text-white">Fair Pause-and-Resume Deadline Clock</h3>
+            <p class="text-xs text-slate-300">Drag the slider to simulate institution reply delay: watch the statutory deadline extend by only the paused days.</p>
+
+            <div class="space-y-1">
+              <div class="flex justify-between text-xs text-slate-300">
+                <span>Institution Reply Delay:</span>
+                <span id="demo2-days" class="font-bold text-amber-400">8 Days</span>
+              </div>
+              <input type="range" id="demo2-slider" min="0" max="20" value="8" class="w-full">
+            </div>
+
+            <div class="space-y-2 pt-2">
+              <div class="text-[11px] font-bold text-slate-400 uppercase">Dual-Track Clock Visualization:</div>
+              <div class="h-8 rounded-xl overflow-hidden flex text-[11px] font-bold text-white">
+                <div id="demo2-bar-aicte1" class="bg-blue-600 grid place-items-center">AICTE 6d</div>
+                <div id="demo2-bar-paused" class="bg-slate-500 grid place-items-center text-slate-200">Paused</div>
+                <div id="demo2-bar-aicte2" class="bg-blue-600 grid place-items-center">AICTE 9d</div>
+              </div>
+            </div>
+
+            <div class="text-xs text-slate-300 pt-2 border-t border-slate-700/60">
+              New Recalculated Due Date: <strong id="demo2-due" class="text-emerald-400">--</strong>. Neither party is penalized for the other's delay.
+            </div>
+          </div>
+
+          <!-- Sandbox 3: SHA-256 Tamper Chain -->
+          <div id="sandbox-chain" class="glass-panel p-6 rounded-2xl space-y-4 border border-emerald-500/30">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold uppercase tracking-wider text-emerald-400">Demo #3 · Novelty 06</span>
+              <span class="badge-pill badge-live">Real Web Crypto</span>
+            </div>
+            <h3 class="text-lg font-bold text-white">Tamper-Evident SHA-256 Merkle Ledger</h3>
+            <p class="text-xs text-slate-300">Type inside any record below. Notice how real-time cryptographic hashing immediately exposes tampering.</p>
+
+            <div id="demo3-records" class="space-y-2">
+              <!-- Populated via app.js -->
+            </div>
+
+            <div id="demo3-status" class="pt-2 border-t border-slate-700/60">
+              <!-- Populated via app.js -->
+            </div>
+          </div>
+
+          <!-- Sandbox 4: Lease Runway Radar -->
+          <div id="sandbox-runway" class="glass-panel p-6 rounded-2xl space-y-4 border border-purple-500/30">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold uppercase tracking-wider text-purple-400">Demo #4 · Novelty 07</span>
+              <span class="badge-pill badge-live">APH 2.1(e)</span>
+            </div>
+            <h3 class="text-lg font-bold text-white">Land Lease Runway Radar</h3>
+            <p class="text-xs text-slate-300">Calculates whether remaining land lease guarantees student batch completion before Extension of Approval is blocked.</p>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="text-[11px] text-slate-400 block mb-1">Lease Remaining: <span id="demo4-lease-val" class="text-white font-bold">4.7 Yrs</span></label>
+                <input type="range" id="demo4-lease" min="0" max="25" step="0.5" value="4.7" class="w-full">
+              </div>
+              <div>
+                <label class="text-[11px] text-slate-400 block mb-1">Longest Course: <span id="demo4-course-val" class="text-white font-bold">4 Yrs</span></label>
+                <input type="range" id="demo4-course" min="1" max="5" step="1" value="4" class="w-full">
+              </div>
+            </div>
+
+            <div class="space-y-1.5 pt-2">
+              <div class="text-[11px] font-bold text-slate-400 uppercase">Lease Safety Gauge:</div>
+              <div class="h-3 rounded-full bg-slate-800 overflow-hidden">
+                <div id="demo4-gauge" class="h-full bg-emerald-500 transition-all" style="width: 25%;"></div>
+              </div>
+            </div>
+
+            <div id="demo4-status" class="text-xs text-slate-300 pt-2 border-t border-slate-700/60">
+              <!-- Populated via app.js -->
+            </div>
+          </div>
+
+          <!-- Sandbox 5: drand Quantum Beacon -->
+          <div id="sandbox-draw" class="glass-panel p-6 rounded-2xl space-y-4 border border-blue-500/30">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold uppercase tracking-wider text-blue-400">Demo #5 · Novelty 09 & 10</span>
+              <span class="badge-pill badge-live">Quantum Beacon</span>
+            </div>
+            <h3 class="text-lg font-bold text-white">drand Unbiasable Committee Selection</h3>
+            <p class="text-xs text-slate-300">Conflicted experts are struck through; public randomness executes the committee draw with zero lobbying opportunity.</p>
+
+            <div id="demo5-experts" class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <!-- Populated via app.js -->
+            </div>
+
+            <div class="flex items-center justify-between gap-3 pt-2">
+              <button id="demo5-btn" class="px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold text-xs shadow-md transition">
+                Draw Committee via drand Beacon
+              </button>
+            </div>
+
+            <div id="demo5-status" class="pt-2 border-t border-slate-700/60 text-xs text-slate-400">
+              Awaiting draw execution...
+            </div>
+          </div>
+
+          <!-- Sandbox 6: AI Pre-Flight Document Diagnostics -->
+          <div id="sandbox-docai" class="glass-panel p-6 rounded-2xl space-y-4 border border-amber-500/30">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold uppercase tracking-wider text-amber-400">Demo #6 · Novelty 19</span>
+              <span class="badge-pill badge-live">4-Layer Pipeline</span>
+            </div>
+            <h3 class="text-lg font-bold text-white">AI Upload Pre-Flight Diagnostics</h3>
+            <p class="text-xs text-slate-300">Simulates real-time OCR, NLP field parsing, and Isolation Forest ML anomaly detection on uploaded college files.</p>
+
+            <div class="flex flex-wrap gap-2">
+              <button onclick="runDocAiSim('clean')" class="px-3 py-1.5 rounded-lg bg-emerald-950/60 text-emerald-300 border border-emerald-500/40 text-xs font-bold hover:bg-emerald-500 hover:text-navy-950 transition">
+                Test Valid Certificate
+              </button>
+              <button onclick="runDocAiSim('deficient')" class="px-3 py-1.5 rounded-lg bg-red-950/60 text-red-300 border border-red-500/40 text-xs font-bold hover:bg-red-500 hover:text-navy-950 transition">
+                Test Deficient Certificate
+              </button>
+            </div>
+
+            <div id="demo6-result" class="min-h-[110px] flex items-center justify-center p-3 rounded-xl bg-slate-900/60 border border-slate-800 text-xs text-slate-400">
+              Click a sample above to observe the 4-layer AI verification engine execute.
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- SECTION 5: LIVE PROTOTYPE ACCESS CALLOUT -->
+      <section id="prototype" class="glass-panel p-8 md:p-12 rounded-3xl border border-white/20 relative overflow-hidden text-center md:text-left flex flex-col md:flex-row items-center justify-between gap-8 bg-gradient-to-r from-blue-950/80 via-[#0A1D42] to-amber-950/30">
+        <div class="space-y-3 max-w-2xl">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-bold uppercase">
+            100% Production Grade Architecture
+          </div>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-white">Experience All 46 Screens in Action</h2>
+          <p class="text-slate-300 text-sm leading-relaxed">
+            ANUMATI is not a visual mockup. The full production system features a FastAPI backend with 158 endpoints, PostgreSQL with Row-Level Security, React 18 frontend, and Keycloak SSO authentication.
+          </p>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+          <a href="https://github.com/SACHIN-MRAJ/Anvaya-" target="_blank" class="px-6 py-3.5 rounded-2xl bg-white text-navy-950 font-black text-sm hover:bg-slate-100 transition shadow-lg text-center">
+            View Source Code on GitHub
+          </a>
+          <a href="#sandboxes" class="px-6 py-3.5 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-sm transition shadow-lg text-center">
+            Replay Interactive Demos
+          </a>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/10 bg-[#050E21] py-10 px-6 text-center text-xs text-slate-400 space-y-3">
+      <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-2 font-bold text-slate-200">
+          <span class="w-6 h-6 rounded-md bg-amber-500 text-navy-950 font-black text-xs grid place-items-center">अ</span>
+          <span>ANUMATI · Developed by Team Anvaya</span>
+        </div>
+        <div>
+          Smart India Hackathon (SIH 2026) · Technical Education Regulatory Operating System
+        </div>
+        <div>
+          Licensed under <a href="https://github.com/SACHIN-MRAJ/Anvaya-/blob/main/LICENSE" target="_blank" class="text-amber-400 hover:underline">MIT License</a> · Netlify Ready
+        </div>
+      </div>
+    </footer>
+
+    <!-- Floating Dock Navigation for Quick Access -->
+    <div class="floating-dock">
+      <a href="#hero" class="dock-item active">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+        Top
+      </a>
+      <a href="#problems" class="dock-item">
+        The 6 Crises
+      </a>
+      <a href="#journey" class="dock-item">
+        One File's Journey
+      </a>
+      <a href="#novelties" class="dock-item">
+        19 Novelties
+      </a>
+      <a href="#sandboxes" class="dock-item text-amber-300">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+        Live Sandboxes
+      </a>
+    </div>
+
+  </div>
+
+  <!-- Main JavaScript Application -->
+  <script src="app.js"></script>
+</body>
+</html>

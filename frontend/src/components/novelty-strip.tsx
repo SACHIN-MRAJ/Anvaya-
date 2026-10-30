@@ -60,7 +60,7 @@ export function NoveltyStrip({ className }: { className?: string }) {
         ))}
         <span className="ml-auto flex items-center gap-1">
           <Link to="/solution" className="rounded-lg px-2 py-1 text-xs font-semibold text-brand-700 hover:bg-brand-50">
-            All 18 explained
+            All 19 explained
           </Link>
           <button onClick={() => toggle(false)} className="rounded-lg p-1 text-ink-mute hover:bg-slate-100" aria-label="Hide the novelty guide" title="Hide">
             <X size={14} />

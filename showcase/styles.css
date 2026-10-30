@@ -1,0 +1,362 @@
+/* ==========================================================================
+   ANUMATI · Showcase Presentation Theme (Team Anvaya - SIH 2026)
+   ========================================================================== */
+
+:root {
+  --navy-950: #050E21;
+  --navy-900: #0A1D42;
+  --navy-800: #122B5C;
+  --navy-700: #1B3B78;
+  --navy-600: #254F9D;
+  --navy-50:  #EEF4FB;
+
+  --saffron-600: #C65F00;
+  --saffron-500: #E67E22;
+  --saffron-400: #F39C12;
+  --saffron-100: #FEF3C7;
+  --saffron-50:  #FFFBEB;
+
+  --emerald-700: #125A32;
+  --emerald-600: #17713F;
+  --emerald-500: #10B981;
+  --emerald-100: #D1FAE5;
+  --emerald-50:  #ECFDF5;
+
+  --slate-900: #0F172A;
+  --slate-800: #1E293B;
+  --slate-700: #334155;
+  --slate-600: #475569;
+  --slate-400: #94A3B8;
+  --slate-200: #E2E8F0;
+  --slate-100: #F1F5F9;
+  --slate-50:  #F8FAFC;
+
+  --bg-gradient: radial-gradient(circle at 50% 0%, #152B58 0%, #081530 50%, #040A18 100%);
+  --glow-saffron: 0 0 35px rgba(230, 126, 34, 0.25);
+  --glow-blue: 0 0 35px rgba(37, 79, 157, 0.35);
+  --glow-emerald: 0 0 35px rgba(16, 185, 129, 0.25);
+  --card-glass: rgba(18, 43, 92, 0.45);
+  --card-border: rgba(255, 255, 255, 0.08);
+  --card-border-hover: rgba(243, 156, 18, 0.4);
+}
+
+/* Base styling */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: #F8FAFC;
+  background-color: var(--navy-950);
+  background-image: var(--bg-gradient);
+  min-height: 100vh;
+}
+
+body {
+  overflow-x: hidden;
+  position: relative;
+  line-height: 1.6;
+}
+
+/* Background Canvas */
+#bg-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.65;
+}
+
+/* Spotlight Cursor Follower */
+#cursor-spotlight {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(230, 126, 34, 0.06) 0%, rgba(37, 79, 157, 0.04) 40%, transparent 70%);
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  transition: transform 0.1s ease-out;
+}
+
+/* Main Content Layer */
+.content-wrapper {
+  position: relative;
+  z-index: 2;
+}
+
+/* Typography Enhancements */
+.gradient-text-saffron {
+  background: linear-gradient(135deg, #F39C12 0%, #F59E0B 50%, #FBBF24 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gradient-text-blue {
+  background: linear-gradient(135deg, #60A5FA 0%, #93C5FD 50%, #BFDBFE 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gradient-text-emerald {
+  background: linear-gradient(135deg, #34D399 0%, #10B981 50%, #059669 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Glassmorphism Cards */
+.glass-panel {
+  background: rgba(14, 31, 68, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--card-border);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-panel:hover {
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.65);
+}
+
+.glass-card-interactive {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, box-shadow 0.3s ease;
+  will-change: transform;
+}
+
+.glass-card-interactive:hover {
+  transform: translateY(-4px) scale(1.008);
+  border-color: var(--card-border-hover);
+  box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.7), var(--glow-saffron);
+}
+
+/* Badge System */
+.badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+}
+
+.badge-live {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34D399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.badge-simpler {
+  background: rgba(245, 158, 11, 0.15);
+  color: #FBBF24;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.badge-designed {
+  background: rgba(148, 163, 184, 0.15);
+  color: #CBD5E1;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+}
+
+.badge-pillar {
+  background: rgba(59, 130, 246, 0.15);
+  color: #93C5FD;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+/* Numerical Step Counter */
+.num-bubble {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #F39C12 0%, #D97706 100%);
+  color: #050E21;
+  font-weight: 900;
+  font-size: 0.95rem;
+  box-shadow: 0 4px 14px rgba(217, 119, 6, 0.35);
+  flex-shrink: 0;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--navy-950);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--navy-700);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--saffron-600);
+}
+
+/* Keyframe Animations */
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(243, 156, 18, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 35px rgba(243, 156, 18, 0.45);
+  }
+}
+
+@keyframes floatGentle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes radarSweep {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-float {
+  animation: floatGentle 4s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+
+.shimmer-text {
+  background: linear-gradient(90deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,0.7) 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 3s linear infinite;
+}
+
+/* Floating Dock Navigation */
+.floating-dock {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(10, 29, 66, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 8px 16px;
+  border-radius: 9999px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 90vw;
+  overflow-x: auto;
+}
+
+.dock-item {
+  color: var(--slate-400);
+  padding: 6px 14px;
+  border-radius: 9999px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dock-item:hover, .dock-item.active {
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.dock-item.active {
+  background: linear-gradient(135deg, rgba(243, 156, 18, 0.25) 0%, rgba(217, 119, 6, 0.35) 100%);
+  color: #FBBF24;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+}
+
+/* Accordion Open Transition */
+.novelty-drawer {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease;
+}
+
+.novelty-drawer.open {
+  max-height: 1800px;
+  opacity: 1;
+}
+
+/* Interactive Slider Customization */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: rgba(255, 255, 255, 0.12);
+  height: 8px;
+  border-radius: 4px;
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #F59E0B;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.6);
+  transition: transform 0.15s ease;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .floating-dock {
+    bottom: 12px;
+    padding: 6px 12px;
+    gap: 8px;
+  }
+  .dock-item {
+    padding: 5px 10px;
+    font-size: 0.75rem;
+  }
+}
