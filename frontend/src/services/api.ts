@@ -34,16 +34,60 @@ export class ApiError extends Error {
 const RETRY_AFTER_MS = 15_000;
 let downUntil = 0;
 let apiDown = false;
-const markDown = () => {
+
+type ApiModeListener = (mode: 'on' | 'fallback' | 'off') => void;
+const modeListeners = new Set<ApiModeListener>();
+
+export const onApiModeChange = (listener: ApiModeListener) => {
+  modeListeners.add(listener);
+  return () => { modeListeners.delete(listener); };
+};
+
+const notifyModeChange = () => {
+  const m = apiMode();
+  modeListeners.forEach((fn) => {
+    try { fn(m); } catch { /* ignore */ }
+  });
+};
+
+export const markDown = () => {
+  const prev = checkDown();
   apiDown = true;
   downUntil = Date.now() + RETRY_AFTER_MS;
+  if (!prev) notifyModeChange();
 };
+
+export const markUp = () => {
+  if (apiDown) {
+    apiDown = false;
+    downUntil = 0;
+    notifyModeChange();
+  }
+};
+
 const checkDown = () => {
-  if (apiDown && Date.now() >= downUntil) apiDown = false;
+  if (apiDown && Date.now() >= downUntil) {
+    apiDown = false;
+    notifyModeChange();
+  }
   return apiDown;
 };
 /** "on": answers come from the backend · "fallback": backend unreachable, sample data · "off": sample data by choice. */
 export const apiMode = (): 'on' | 'fallback' | 'off' => (!USE_API ? 'off' : checkDown() ? 'fallback' : 'on');
+
+// Quick startup probe: verify if the API is genuinely reachable so we don't display a false "Live" badge
+if (USE_API && typeof window !== 'undefined') {
+  fetch(`${API_BASE}/api/health`, { credentials: 'include' })
+    .then((r) => {
+      const ct = r.headers.get('content-type') ?? '';
+      if (!r.ok || ct.includes('text/html')) {
+        markDown();
+      } else {
+        markUp();
+      }
+    })
+    .catch(() => markDown());
+}
 
 /** Signs the backend session in again with the portal and role kept in this tab (development sign-in only;
  *  with single sign-on an expired session sends the person back through Keycloak instead). */
@@ -73,14 +117,21 @@ export async function http<T>(path: string, init?: RequestInit, retry = true): P
   // 204 No Content (and any empty body) is a successful answer with nothing to parse.
   const body = await res.text();
   if (!body) return undefined as T;
-  return (res.headers.get('content-type')?.includes('json') ? JSON.parse(body) : body) as T;
+  const contentType = res.headers.get('content-type') ?? '';
+  // If the server returns HTML (e.g. Vercel SPA rewrite fallback returning index.html for unrouted /api), treat as backend unreachable
+  if (contentType.includes('text/html') || body.trim().startsWith('<!DOCTYPE') || body.trim().startsWith('<html')) {
+    throw new ApiError(502, `Backend unreachable: received HTML instead of JSON from ${API_BASE || 'server'}`);
+  }
+  return (contentType.includes('json') ? JSON.parse(body) : body) as T;
 }
 
 /** Real API when available; built-in data when the backend is off or unreachable. Client errors (4xx) are real answers and are raised. */
 export async function viaApi<T>(path: string, fallback: () => T | Promise<T>, init?: RequestInit): Promise<T> {
   if (!USE_API || checkDown()) return fallback();
   try {
-    return await http<T>(path, init);
+    const res = await http<T>(path, init);
+    markUp();
+    return res;
   } catch (e) {
     if (e instanceof ApiError && e.status < 500) throw e;
     markDown();

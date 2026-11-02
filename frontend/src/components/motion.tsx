@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion, useScroll, useSpring } from 'framer-motion';
 import { ArrowUp, CloudOff, Radio } from 'lucide-react';
-import { apiMode } from '../services/api';
+import { apiMode, onApiModeChange } from '../services/api';
 import { cn } from '../lib/utils';
 
 /** True when the person asked for less motion (device setting, Reduce motion or Data saver in Accessibility). */
@@ -51,8 +51,12 @@ export function BackToTop() {
 export function ConnectionBadge({ className }: { className?: string }) {
   const [mode, setMode] = useState(apiMode());
   useEffect(() => {
+    const unsub = onApiModeChange((m) => setMode(m));
     const id = setInterval(() => setMode(apiMode()), 4000);
-    return () => clearInterval(id);
+    return () => {
+      unsub();
+      clearInterval(id);
+    };
   }, []);
   const live = mode === 'on';
   return (

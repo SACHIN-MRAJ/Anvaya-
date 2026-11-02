@@ -5,6 +5,7 @@
  * screen says so (see NeedsServer). Client errors (4xx) are raised as ApiError with the server's sentence.
  */
 import type { Application, Institution } from '../types';
+import { DEMO_INSTITUTION } from '../data/institutions';
 import { del, json, post, put, viaApi, type StoredDocument } from './api';
 
 const none = async () => null;
@@ -59,7 +60,43 @@ export interface ProfileData {
   history: RecordEntry[];
   actions: RegulatoryActionRow[];
 }
-export const getProfile = () => viaApi<ProfileData | null>('/institution/profile', none);
+
+function mockProfile(): ProfileData {
+  return {
+    institution: DEMO_INSTITUTION,
+    profile: {
+      headName: 'Dr. Anand Sharma',
+      headEmail: 'principal@narmadavalley.ac.in',
+      headPhone: '+91 98765 43210',
+      officialEmail: 'info@narmadavalley.ac.in',
+      website: 'https://narmadavalley.ac.in',
+      address: 'Sector 4, Knowledge Park, Bypass Road',
+      pincode: '452001',
+    },
+    fields: {
+      headName: 'Head of Institution (Principal / Director)',
+      headEmail: 'Principal Email',
+      headPhone: 'Principal Phone',
+      officialEmail: 'Official Institution Email',
+      website: 'Website Address',
+      address: 'Campus Address',
+      pincode: 'PIN Code',
+    },
+    completeness: 100,
+    leaders: [
+      { id: 1, name: 'Dr. Anand Sharma', position: 'Principal / Director', department: 'Administration', email: 'principal@narmadavalley.ac.in', isSignatory: true, since: '2021-06-01', until: null },
+      { id: 2, name: 'Shri Vikramaditya Rao', position: 'Chairman of the Trust', department: 'Governing Body', email: 'chairman@narmadaeducation.org', isSignatory: true, since: '2018-04-15', until: null },
+      { id: 3, name: 'Prof. Sunita Deshmukh', position: 'Head of Department', department: 'Computer Science', email: 'hod.cse@narmadavalley.ac.in', isSignatory: false, since: '2022-08-01', until: null }
+    ],
+    signatoryOk: true,
+    history: [
+      { at: '2026-03-15T10:30:00Z', actor: 'Dr. Anand Sharma', role: 'Principal / Director', action: 'Annual Institutional Master update', hash: 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855' }
+    ],
+    actions: [],
+  };
+}
+
+export const getProfile = () => viaApi<ProfileData | null>('/institution/profile', async () => mockProfile());
 export const saveProfile = (body: Record<string, string>) => viaApi<{ changed: number } | null>('/institution/profile', none, put(body));
 export const addLeader = (body: Omit<Leader, 'id' | 'until'>) => viaApi<Leader | null>('/institution/leaders', none, json(body));
 export const endLeader = (id: number) => viaApi<Leader | null>(`/institution/leaders/${id}/end`, none, post);
