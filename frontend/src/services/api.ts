@@ -17,7 +17,11 @@ import { sha256Hex } from '../lib/hash';
 import { sleep, TODAY, daysBetween } from '../lib/utils';
 import { summarise } from '../lib/metrics';
 
-const API_BASE = import.meta.env.VITE_API_BASE ?? '';
+// In hosted production environments (e.g. Vercel), route via same-origin relative path
+// so the Vercel proxy rewrite forwards requests with cookies intact, avoiding cross-site SameSite cookie drops.
+const API_BASE = typeof window !== 'undefined' && !['localhost', '127.0.0.1'].includes(window.location.hostname)
+  ? ''
+  : (import.meta.env.VITE_API_BASE ?? '');
 export const USE_API = import.meta.env.VITE_USE_API === 'true';
 
 export class ApiError extends Error {
