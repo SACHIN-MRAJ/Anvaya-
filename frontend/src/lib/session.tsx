@@ -157,17 +157,27 @@ export function SessionProvider({ children }: { children: ReactNode }) {
       if (!live) return;
       setAuthMode(mode);
       // After a single sign-on redirect the browser holds the server's session cookie but this tab has no copy yet.
-      if (mode === 'oidc' || !load()) {
+      if (mode === 'oidc') {
         const me = await apiMe();
         if (!live) return;
         if (me) {
           const s = fromPrincipal(me);
           setSession(s);
           save(s);
-        } else if (mode === 'oidc') {
+        } else {
           setSession(null);
           save(null);
         }
+      } else {
+        // Dev mode: ensure a valid session exists and sync session cookie with backend
+        let s = load();
+        if (!s) {
+          const isAicte = typeof window !== 'undefined' && window.location.pathname.startsWith('/aicte');
+          s = isAicte ? DEMO_SESSIONS.aicte : DEMO_SESSIONS.institution;
+          save(s);
+        }
+        setSession(s);
+        void apiSignIn(s.portal, roleOf(s));
       }
       if (live) setReady(true);
     });

@@ -8,12 +8,17 @@ import { cn, formatDate } from '../lib/utils';
 
 /** Loading while the server answers; a plain explanation when the site is running on built-in data. */
 export function Pending({ loading, what }: { loading: boolean; what: string }) {
-  if (loading && apiMode() === 'on') return <LoadingRows rows={6} />;
+  if (loading) return <LoadingRows rows={6} />;
   return (
     <EmptyState
       icon={<CloudOff size={22} />}
-      title="This page needs the ANUMATI server"
-      text={`${what} lives in the institution's record on the server. Start the backend (backend/run.cmd) and reload; the sample data in the browser does not include it.`}
+      title={`${what} is connecting`}
+      text="Connecting to live ANUMATI records. If the server is cold-booting, please wait a moment."
+      action={
+        <button onClick={() => window.location.reload()} className="btn-secondary mt-3">
+          Reload
+        </button>
+      }
     />
   );
 }

@@ -51,7 +51,7 @@ const notifyModeChange = () => {
 };
 
 export const markDown = () => {
-  const prev = checkDown();
+  const prev = apiDown;
   apiDown = true;
   downUntil = Date.now() + RETRY_AFTER_MS;
   if (!prev) notifyModeChange();
@@ -65,28 +65,35 @@ export const markUp = () => {
   }
 };
 
-const checkDown = () => {
-  if (apiDown && Date.now() >= downUntil) {
-    apiDown = false;
-    notifyModeChange();
-  }
-  return apiDown;
-};
-/** "on": answers come from the backend · "fallback": backend unreachable, sample data · "off": sample data by choice. */
-export const apiMode = (): 'on' | 'fallback' | 'off' => (!USE_API ? 'off' : checkDown() ? 'fallback' : 'on');
+export const checkDown = () => apiDown && Date.now() < downUntil;
+const canAttemptApi = () => !checkDown();
 
-// Quick startup probe: verify if the API is genuinely reachable so we don't display a false "Live" badge
+/** "on": answers come from the backend · "fallback": backend unreachable, sample data · "off": sample data by choice. */
+export const apiMode = (): 'on' | 'fallback' | 'off' => {
+  if (!USE_API) return 'off';
+  if (apiDown) return 'fallback';
+  return 'on';
+};
+
+// Startup health check + periodic wakeup ping if down
 if (USE_API && typeof window !== 'undefined') {
-  fetch(`${API_BASE}/api/health`, { credentials: 'include' })
-    .then((r) => {
-      const ct = r.headers.get('content-type') ?? '';
-      if (!r.ok || ct.includes('text/html')) {
-        markDown();
-      } else {
-        markUp();
-      }
-    })
-    .catch(() => markDown());
+  const checkHealth = () => {
+    fetch(`${API_BASE}/api/health`, { credentials: 'include' })
+      .then((r) => {
+        const ct = r.headers.get('content-type') ?? '';
+        if (!r.ok || ct.includes('text/html')) {
+          markDown();
+        } else {
+          markUp();
+        }
+      })
+      .catch(() => markDown());
+  };
+
+  checkHealth();
+  setInterval(() => {
+    if (apiDown) checkHealth();
+  }, 10_000);
 }
 
 /** Signs the backend session in again with the portal and role kept in this tab (development sign-in only;
@@ -94,9 +101,16 @@ if (USE_API && typeof window !== 'undefined') {
 async function reLogin(): Promise<boolean> {
   if ((await getAuthMode()) === 'oidc') return false;
   try {
-    const s = JSON.parse(sessionStorage.getItem('anumati.session') ?? 'null') as { portal: string; officerRole?: string; role?: string } | null;
-    if (!s) return false;
-    const r = await fetch(`${API_BASE}/api/auth/dev-login`, { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(signInBody(s.portal, s.portal === 'aicte' ? s.officerRole : s.role)) });
+    const s = JSON.parse(sessionStorage.getItem('anumati.session') ?? 'null') as { portal?: string; officerRole?: string; role?: string } | null;
+    const portal = s?.portal || (typeof window !== 'undefined' && window.location.pathname.startsWith('/aicte') ? 'aicte' : 'institution');
+    const role = portal === 'aicte' ? (s?.officerRole || 'Bureau head') : (s?.role || 'Principal / Director');
+    const r = await fetch(`${API_BASE}/api/auth/dev-login`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(signInBody(portal, role)),
+    });
+    if (r.ok) markUp();
     return r.ok;
   } catch {
     return false;
@@ -127,15 +141,15 @@ export async function http<T>(path: string, init?: RequestInit, retry = true): P
 
 /** Real API when available; built-in data when the backend is off or unreachable. Client errors (4xx) are real answers and are raised. */
 export async function viaApi<T>(path: string, fallback: () => T | Promise<T>, init?: RequestInit): Promise<T> {
-  if (!USE_API || checkDown()) return fallback();
+  if (!USE_API || !canAttemptApi()) return fallback();
   try {
     const res = await http<T>(path, init);
     markUp();
     return res;
   } catch (e) {
-    if (e instanceof ApiError && e.status < 500) throw e;
     markDown();
-    console.warn(`ANUMATI API unreachable; using built-in data and retrying in ${RETRY_AFTER_MS / 1000} s.`, e);
+    if (e instanceof ApiError && e.status < 500 && e.status !== 401 && e.status !== 403) throw e;
+    console.warn(`ANUMATI API (${path}) unavailable; using fallback data.`, e);
     return fallback();
   }
 }
